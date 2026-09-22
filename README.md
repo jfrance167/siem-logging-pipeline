@@ -116,7 +116,7 @@ $env:GRAFANA_ADMIN_PASSWORD = "validation-only"
 docker compose config --quiet
 ```
 
-GitHub Actions repeats these checks on Windows and Ubuntu with Python 3.10, 3.13, and 3.14, validates the Compose model, and scans the repository for secrets. Every action is pinned to an immutable commit or container digest.
+GitHub Actions repeats these checks on Windows and Ubuntu with Python 3.10, 3.13, and 3.14, validates the Compose model, and scans the repository for secrets. A stable `CI Gate` job aggregates those results for branch protection, so changing the test matrix cannot leave obsolete required checks behind. Every action is pinned to an immutable commit or container digest.
 
 ## Operations
 

@@ -49,3 +49,19 @@ jobs:
         uses: docker://ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f # v8.30.1
         with:
           args: detect --source . --redact --verbose --exit-code 2
+
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs: [python, compose, secret-scan]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify required jobs passed
+        env:
+          PYTHON_RESULT: ${{ needs.python.result }}
+          COMPOSE_RESULT: ${{ needs.compose.result }}
+          SECRET_SCAN_RESULT: ${{ needs.secret-scan.result }}
+        run: |
+          test "$PYTHON_RESULT" = "success"
+          test "$COMPOSE_RESULT" = "success"
+          test "$SECRET_SCAN_RESULT" = "success"
