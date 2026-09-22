@@ -1,0 +1,54 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+loki.source.file "security_events" {
+  targets = [{
+    __path__ = "/var/log/siem/security-events.jsonl",
+    job      = "authentication-lab",
+  }]
+  forward_to = [loki.process.security_events.receiver]
+
+  file_match {
+    enabled     = true
+    sync_period = "2s"
+  }
+}
+
+loki.process "security_events" {
+  stage.json {
+    expressions = {
+      event_type = "event_type",
+      host       = "host",
+      outcome    = "outcome",
+      scenario   = "scenario",
+      severity   = "severity",
+      timestamp  = "timestamp",
+    }
+  }
+
+  stage.labels {
+    values = {
+      event_type = "",
+      host       = "",
+      outcome    = "",
+      scenario   = "",
+      severity   = "",
+    }
+  }
+
+  stage.timestamp {
+    source = "timestamp"
+    format = "RFC3339Nano"
+  }
+
+  forward_to = [loki.write.local.receiver]
+}
+
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+

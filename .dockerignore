@@ -1,0 +1,10 @@
+.git
+.github
+.env
+.private
+__pycache__
+*.py[cod]
+logs
+tests
+VALIDATION.md
+
