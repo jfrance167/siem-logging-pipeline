@@ -18,7 +18,7 @@ Synthetic JSONL events
 
 | Component | Pinned version | Purpose |
 | --- | --- | --- |
-| Python generator | 3.13.7 | Produces deterministic normal, brute-force, and password-spray telemetry |
+| Python generator | 3.14.5 | Produces deterministic normal, brute-force, and password-spray telemetry |
 | Grafana Alloy | 1.19.2 | Tails JSONL, parses fields, adds bounded labels, and forwards events |
 | Grafana Loki | 3.7.8 | Retains and queries logs using LogQL |
 | Grafana | 13.2.2 | Provisions the Loki data source and seven-panel SOC dashboard |
@@ -116,7 +116,7 @@ $env:GRAFANA_ADMIN_PASSWORD = "validation-only"
 docker compose config --quiet
 ```
 
-GitHub Actions repeats these checks on Windows and Ubuntu with Python 3.10 and 3.13, validates the Compose model, and scans the repository for secrets. Every action is pinned to an immutable commit or container digest.
+GitHub Actions repeats these checks on Windows and Ubuntu with Python 3.10, 3.13, and 3.14, validates the Compose model, and scans the repository for secrets. Every action is pinned to an immutable commit or container digest.
 
 ## Operations
 
