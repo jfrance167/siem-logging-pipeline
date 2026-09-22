@@ -79,7 +79,7 @@ docker compose --env-file .env run --rm generator --mode brute-force --count 7 -
 docker compose --env-file .env run --rm generator --mode password-spray --count 6 --append
 ```
 
-The generator is a one-shot utility container. An `Exited (0)` result is expected.
+The generator is a one-shot utility container. An `Exited (0)` result is expected. Replacement runs rotate the JSONL file atomically so Alloy detects the new file and ingests every repeated scenario.
 
 ## Dashboard and queries
 

@@ -7,7 +7,7 @@ Validated locally on 2026-09-21 with Docker Desktop and Python 3.13.
 | Check | Result |
 | --- | --- |
 | Python compilation with warnings treated as errors | PASS |
-| Unit and configuration policy tests | PASS (6/6) |
+| Unit and configuration policy tests | PASS (7/7) |
 | Docker Compose model rendering | PASS |
 | Loki readiness endpoint | PASS (HTTP 200) |
 | Alloy readiness endpoint | PASS (HTTP 200) |
@@ -16,6 +16,7 @@ Validated locally on 2026-09-21 with Docker Desktop and Python 3.13.
 | Synthetic mixed scenario | PASS (13 events generated) |
 | Loki ingestion assertion | PASS (13 events queryable) |
 | Brute-force threshold assertion | PASS (7 matching failures; threshold is 5) |
+| Repeated-scenario file rotation | PASS (new file identity detected and re-ingested) |
 
 ## Commands
 

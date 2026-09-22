@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import random
+import tempfile
 import uuid
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -87,6 +88,38 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def write_events(events: list[dict[str, object]], output: Path, append: bool) -> None:
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    if append:
+        with output.open("a", encoding="utf-8", newline="\n") as stream:
+            for event in events:
+                stream.write(json.dumps(event, separators=(",", ":"), sort_keys=True) + "\n")
+        return
+
+    # Replace the file atomically so Alloy observes a new file identity instead
+    # of retaining an end-of-file offset when the lab scenario is rerun.
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            newline="\n",
+            dir=output.parent,
+            prefix=f".{output.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as stream:
+            temporary_path = Path(stream.name)
+            for event in events:
+                stream.write(json.dumps(event, separators=(",", ":"), sort_keys=True) + "\n")
+        temporary_path.replace(output)
+    except BaseException:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
+        raise
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if not 1 <= args.count <= 10_000:
@@ -95,11 +128,7 @@ def main(argv: list[str] | None = None) -> int:
     # every sample and time-window queries immediately include the attack burst.
     base = args.base_time or datetime.now(timezone.utc) - timedelta(minutes=5)
     events = generate_events(args.mode, args.count, args.seed, base)
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    mode = "a" if args.append else "w"
-    with args.output.open(mode, encoding="utf-8", newline="\n") as stream:
-        for event in events:
-            stream.write(json.dumps(event, separators=(",", ":"), sort_keys=True) + "\n")
+    write_events(events, args.output, args.append)
     print(f"Wrote {len(events)} synthetic events to {args.output}")
     return 0
 

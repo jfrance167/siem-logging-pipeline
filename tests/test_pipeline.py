@@ -41,6 +41,20 @@ class GeneratorTests(unittest.TestCase):
             self.assertEqual(7, len(records))
             self.assertTrue(all(record["source_ip"] == "203.0.113.200" for record in records))
 
+    def test_cli_replacement_rotates_file_identity(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "events.jsonl"
+            common = ["--count", "7", "--base-time", "2026-01-01T00:00:00Z", "--output", str(output)]
+            generator.main(["--mode", "normal", *common])
+            first_identity = output.stat().st_ino
+
+            generator.main(["--mode", "brute-force", *common])
+            records = [json.loads(line) for line in output.read_text(encoding="utf-8").splitlines()]
+
+            self.assertNotEqual(first_identity, output.stat().st_ino)
+            self.assertEqual(7, len(records))
+            self.assertTrue(all(record["scenario"] == "brute_force" for record in records))
+
 
 class ConfigurationTests(unittest.TestCase):
     def test_dashboard_is_valid_and_contains_detection_query(self):
@@ -67,4 +81,3 @@ class ConfigurationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
