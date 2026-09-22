@@ -36,4 +36,7 @@ The verifier reported:
 PASS: Loki contains 13 recent events; 7 match the brute-force condition.
 ```
 
-The GitHub Actions run URL can be added here after publication.
+## Published verification
+
+- Repository: <https://github.com/jfrance167/siem-logging-pipeline>
+- Initial successful GitHub Actions run: <https://github.com/jfrance167/siem-logging-pipeline/actions/runs/35684377420>
