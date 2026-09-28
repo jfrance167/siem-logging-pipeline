@@ -34,11 +34,23 @@ All identities are fictional and every address comes from an RFC 5737 documentat
 
 ## Live lab evidence
 
-These screenshots were captured from the running local Docker Compose lab after generating synthetic events and verifying that Loki received them. Dashboard counts reflect repeated generator runs in a rolling 15-minute window and will change as events age out.
+Captured from the running local Docker Compose lab on 2026-09-28 after generating synthetic events and verifying ingestion with `scripts/verify_pipeline.py`. All identities and source addresses are fictional; addresses use the RFC 5737 documentation range. Dashboard counts reflect repeated generator runs in a rolling 15-minute window and change as events age out.
+
+**SOC dashboard.** The overview shows authentication volume, failures, the five-minute brute-force threshold, source addresses, and normalized events.
 
 ![Grafana SIEM dashboard showing authentication counts, detection results, source IP, and synthetic log evidence](screenshots/siem-dashboard-overview.png)
 
+**Collection health.** Alloy reports healthy file source, processing, and Loki write components.
+
 ![Grafana Alloy showing healthy file source, processing, and Loki write components](screenshots/alloy-healthy-components.png)
+
+**Raw detection evidence.** Grafana Explore queries Loki for failed brute-force events and displays the original synthetic JSON log lines.
+
+![Grafana Explore showing the brute-force LogQL selector, log volume, and synthetic event details](screenshots/grafana-explore-brute-force-logs.png)
+
+**Detection query.** The five-minute LogQL count rises above the lab's threshold of five failures.
+
+![Grafana Explore graph showing the five-minute brute-force count from Loki](screenshots/grafana-explore-detection-threshold.png)
 
 ## Quick start
 
