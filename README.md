@@ -32,6 +32,14 @@ Synthetic JSONL events
 
 All identities are fictional and every address comes from an RFC 5737 documentation range. No real credentials or authentication logs are required.
 
+## Live lab evidence
+
+These screenshots were captured from the running local Docker Compose lab after generating synthetic events and verifying that Loki received them. Dashboard counts reflect repeated generator runs in a rolling 15-minute window and will change as events age out.
+
+![Grafana SIEM dashboard showing authentication counts, detection results, source IP, and synthetic log evidence](screenshots/siem-dashboard-overview.png)
+
+![Grafana Alloy showing healthy file source, processing, and Loki write components](screenshots/alloy-healthy-components.png)
+
 ## Quick start
 
 Prerequisites: Docker Desktop with Compose and Python 3.10+.
