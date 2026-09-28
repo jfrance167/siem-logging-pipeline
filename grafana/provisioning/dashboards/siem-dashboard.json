@@ -38,23 +38,26 @@
     },
     {
       "datasource": {"type": "loki", "uid": "loki"},
-      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "custom": {"drawStyle": "line", "fillOpacity": 15, "lineInterpolation": "linear", "lineWidth": 2, "showPoints": "never"}}, "overrides": []},
+      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}, "custom": {"drawStyle": "line", "fillOpacity": 15, "lineInterpolation": "linear", "lineWidth": 2, "showPoints": "always", "pointSize": 5}}, "overrides": []},
       "gridPos": {"h": 8, "w": 14, "x": 0, "y": 4},
       "id": 4,
       "options": {"legend": {"calcs": [], "displayMode": "list", "placement": "bottom", "showLegend": true}, "tooltip": {"mode": "multi", "sort": "desc"}},
-      "targets": [{"datasource": {"type": "loki", "uid": "loki"}, "expr": "sum by (outcome) (count_over_time({job=\"authentication-lab\"}[$__auto]))", "legendFormat": "{{outcome}}", "queryType": "range", "refId": "A"}],
+      "targets": [{"datasource": {"type": "loki", "uid": "loki"}, "expr": "sum by (outcome) (count_over_time({job=\"authentication-lab\"}[1m]))", "legendFormat": "{{outcome}}", "queryType": "range", "refId": "A"}],
       "title": "Authentication Outcomes Over Time",
       "type": "timeseries"
     },
     {
       "datasource": {"type": "loki", "uid": "loki"},
-      "fieldConfig": {"defaults": {"color": {"mode": "palette-classic"}}, "overrides": []},
+      "fieldConfig": {"defaults": {}, "overrides": [
+        {"matcher": {"id": "byName", "options": "source_ip"}, "properties": [{"id": "displayName", "value": "Source IP"}]},
+        {"matcher": {"id": "byName", "options": "Value #A"}, "properties": [{"id": "displayName", "value": "Failures"}]}
+      ]},
       "gridPos": {"h": 8, "w": 10, "x": 14, "y": 4},
       "id": 5,
-      "options": {"displayMode": "gradient", "legend": {"displayMode": "list", "placement": "bottom", "showLegend": false}, "minVizHeight": 10, "minVizWidth": 0, "namePlacement": "auto", "orientation": "horizontal", "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false}, "showUnfilled": true, "sizing": "auto", "valueMode": "color"},
+      "options": {"showHeader": true, "cellHeight": "sm", "footer": {"show": false}},
       "targets": [{"datasource": {"type": "loki", "uid": "loki"}, "expr": "topk(10, sum by (source_ip) (count_over_time({job=\"authentication-lab\"} | json | outcome=\"failure\" [$__range])))", "legendFormat": "{{source_ip}}", "queryType": "instant", "refId": "A"}],
       "title": "Top Failure Sources",
-      "type": "bargauge"
+      "type": "table"
     },
     {
       "datasource": {"type": "loki", "uid": "loki"},
@@ -85,4 +88,3 @@
   "uid": "siem-logging-pipeline",
   "version": 1
 }
-
