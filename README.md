@@ -4,16 +4,22 @@ A local, containerized security-monitoring pipeline that generates synthetic aut
 
 This complements the separate SIEM Detection Engineering Lab: that project focuses on offline correlation and ATT&CK-mapped alerts, while this project demonstrates live collection, transport, storage, querying, and dashboards.
 
+## Project overview
+
+| Focus | Evidence | Scope |
+| --- | --- | --- |
+| Collect, store, query, and visualize authentication telemetry | [Dashboard and collection screenshots](#live-lab-evidence) · [Verification procedure](#quick-start) | Local Docker Compose lab using synthetic events; published ports bind to loopback |
+
+For a quick visual review, jump to the live lab evidence below. The screenshots are captured lab evidence; event counts vary with the rolling time window.
+
 ## Architecture
 
-```text
-Synthetic JSONL events
-        │
-        ▼
-  Grafana Alloy ──────► Grafana Loki ──────► Grafana dashboard
-  tail + parse          indexed storage       LogQL analysis
-        │                       ▲
-        └── labels              └── automated pipeline verifier
+```mermaid
+flowchart LR
+    G["Synthetic JSONL events"] --> A["Grafana Alloy: tail and parse"]
+    A --> L["Grafana Loki: store and query"]
+    L --> D["Grafana: SOC dashboard"]
+    V["Pipeline verifier"] --> L
 ```
 
 | Component | Pinned version | Purpose |
@@ -176,3 +182,4 @@ This is an educational home lab, not a production SIEM. It deliberately omits TL
 ## License
 
 Released under the [MIT License](LICENSE).
+
